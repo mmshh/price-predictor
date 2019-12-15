@@ -7,7 +7,7 @@ def read_data_to_dataframe(path):
     print(os.path.abspath(__file__))
     return pd.read_csv(path)
 
-@staticmethod
+
 def split_data(df):
     data = df.to_numpy()
     X = data[:, :-1]
