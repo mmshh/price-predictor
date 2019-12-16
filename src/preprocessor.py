@@ -1,9 +1,8 @@
 import math
 
-import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
 
-from src.utils import read_data_to_dataframe, apply_one_hot, classifier_kfold_validation
+from src.utils import read_data_to_dataframe, apply_one_hot, classifier_learn, classifier_kfold_validation
 import pandas as pd
 
 
@@ -21,7 +20,8 @@ def fill_missing_data(df):
     df = apply_one_hot(df, "room_type", "rt_")
     df = apply_one_hot(df, "neighbourhood", "nb_")
     df.drop(["neighbourhood_group", "room_type", "last_review", "neighbourhood"], axis=1, inplace=True)
-    df.drop(["minimum_nights","calculated_host_listings_count","number_of_reviews" ,"reviews_per_month" ], axis=1, inplace=True)
+    df.drop(["minimum_nights", "calculated_host_listings_count", "number_of_reviews", "reviews_per_month"], axis=1,
+            inplace=True)
     df = df[[c for c in df if c not in ['price']]
             + ['price']]
     df = df[df["price"] > 0]
@@ -34,6 +34,19 @@ def fill_missing_data(df):
 if __name__ == "__main__":
     df = read_data_to_dataframe("AB_NYC_2019.csv")
     df = fill_missing_data(df)
-    plt.show()
     clf = RandomForestClassifier()
     classifier_kfold_validation(df, clf)
+
+    # run_exhaustive_search(clf, df, 1, parameter_space)
+    # train_acc, test_acc =classifier_learn(df)
+    #
+    # data = [1, 5, 10, 25, 35, 50, 75, 100, 150, 175, 200]
+    # from matplotlib import pyplot as plt
+    # 
+    # plt.plot(data, train_acc)
+    # plt.plot(data, test_acc)
+    # plt.title('model accuracy')
+    # plt.ylabel('accuracy')
+    # plt.xlabel('number of rounds')
+    # plt.legend(['train', 'val'], loc='upper left')
+    # plt.show()
