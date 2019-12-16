@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 import numpy as np
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import KFold, cross_val_score
@@ -42,7 +42,17 @@ def classifier_kfold_validation(df_gender, clf):
     """
     RandomForestClassifier
     Scores: [0.75892401 0.76454945 0.76577682 0.76639051 0.76237725]
+    with test: 0.7582080392758515
     Accuracy: 0.76 (+/- 0.01)
+
+    GradientBoostingClassifier
+    Scores: [0.74823602 0.74514216 0.75306874 0.75153437 0.74915601]
+    with test: 25 rounds: 0.7592308479083564, 50 rounds: 0.758719443592104
+    Accuracy: 0.75 (+/- 0.01)
+
+    SVC
+    Scores: [0.44994376 0.35048067 0.14944763 0.64065057 0.5483376 ]
+    Accuracy: 0.43 (+/- 0.34)
     :param df_gender:
     :param clf:
     :return:
@@ -77,3 +87,28 @@ def classifier_kfoldn(df_gender):
         clf.fit(X_train, y_train)
         y_pred = clf.predict(X_test)
         print("Error rate: " + str(accuracy_score(y_test, y_pred)))
+
+
+def classifier_learn(df):
+    df = df.to_numpy()
+    X = df[:, :-1]
+    y = df[:, -1]
+    x, x_test, y, y_test = train_test_split(X, y, test_size=0.2, train_size=0.8)
+    x_train, x_cv, y_train, y_cv = train_test_split(x, y, test_size=0.25, train_size=0.75)
+    clf = GradientBoostingClassifier(learning_rate=0.15, n_estimators=50, verbose=True)
+    clf.fit(x_train, y_train)
+    y_pred = clf.predict(x_test)
+    print(accuracy_score(y_test, y_pred))
+
+    test_acc = []
+    train_acc = []
+    # for e in [0.01, 0.025, 0.05, 0.075, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5, 1]:
+    #     clf = GradientBoostingClassifier(learning_rate=e, verbose=True)
+    #     clf.fit(x_train, y_train)
+    #     y_pred = clf.predict(x_cv)
+    #     train_pred = clf.predict(x_train)
+    #     test_acc.append(accuracy_score(y_cv, y_pred))
+    #     train_acc.append(accuracy_score(y_train, train_pred))
+    print("Test Acc rate: " + str(test_acc))
+    print("Train Acc rate: " + str(train_acc))
+    return train_acc, test_acc, x_test, y_test

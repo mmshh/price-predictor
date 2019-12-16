@@ -1,9 +1,10 @@
 import math
 
 import matplotlib.pyplot as plt
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn import svm
 
-from src.utils import read_data_to_dataframe, apply_one_hot, classifier_kfold_validation
+from src.utils import read_data_to_dataframe, apply_one_hot, classifier_kfold_validation, classifier_learn
 import pandas as pd
 
 
@@ -35,5 +36,17 @@ if __name__ == "__main__":
     df = read_data_to_dataframe("AB_NYC_2019.csv")
     df = fill_missing_data(df)
     plt.show()
-    clf = RandomForestClassifier()
-    classifier_kfold_validation(df, clf)
+    clf = GradientBoostingClassifier()
+    # classifier_kfold_validation(df, clf)
+    train_acc, test_acc = classifier_learn(df)
+
+    import matplotlib.pyplot as plt
+
+    depth = [0.01, 0.025, 0.05, 0.075, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5, 1]
+    plt.plot(depth, train_acc)
+    plt.plot(depth, test_acc)
+    plt.title('model accuracy')
+    plt.ylabel('accuracy')
+    plt.xlabel('learning rate')
+    plt.legend(['train', 'val'], loc='upper left')
+    plt.show()
