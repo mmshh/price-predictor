@@ -93,8 +93,8 @@ def classifier_learn(df):
     df = df.to_numpy()
     X = df[:, :-1]
     y = df[:, -1]
-    x, x_test, y, y_test = train_test_split(X, y, test_size=0.2, train_size=0.8)
-    x_train, x_cv, y_train, y_cv = train_test_split(x, y, test_size=0.25, train_size=0.75)
+    x, x_test, y, y_test = train_test_split(X, y, test_size=0.2, train_size=0.8, random_state=0)
+    x_train, x_cv, y_train, y_cv = train_test_split(x, y, test_size=0.25, train_size=0.75, random_state=0)
     clf = GradientBoostingClassifier(learning_rate=0.15, n_estimators=50, verbose=True)
     clf.fit(x_train, y_train)
     y_pred = clf.predict(x_test)
