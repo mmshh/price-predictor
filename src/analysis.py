@@ -67,9 +67,11 @@ def plot_target(data):
 def plot_corr(data):
     corr = data.corr()
     fig, ax = plt.subplots(figsize=(10, 10))
-    sns.heatmap(corr,
+    ax = sns.heatmap(corr,
                 xticklabels=corr.columns,
                 yticklabels=corr.columns, annot=True, ax=ax)
+    bottom, top = ax.get_ylim()
+    ax.set_ylim(bottom + 0.5, top - 0.5)
     plt.show()
 
 
